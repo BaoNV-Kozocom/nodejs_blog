@@ -3,7 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const path = require('path');
 const { engine } = require('express-handlebars');
-const sass = require('node-sass');
+// const sass = require('node-sass');
 const route = require('./routes');
 const port = 4000;
 
@@ -17,7 +17,7 @@ app.use(
 app.use(express.json());
 
 //http loger
-app.use(morgan("combined"));
+app.use(morgan('combined'));
 
 //template engine
 app.engine('.hbs', engine({ extname: '.hbs' }));
