@@ -1,0 +1,83 @@
+<div class="mt-4">
+    <div>
+        <h3>Khóa học của tôi</h3>
+        <div class="text-right">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                <path fill-rule="evenodd"
+                    d="M6.5 1.75a.25.25 0 01.25-.25h2.5a.25.25 0 01.25.25V3h-3V1.75zm4.5 0V3h2.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75zM4.496 6.675a.75.75 0 10-1.492.15l.66 6.6A1.75 1.75 0 005.405 15h5.19c.9 0 1.652-.681 1.741-1.576l.66-6.6a.75.75 0 00-1.492-.149l-.66 6.6a.25.25 0 01-.249.225h-5.19a.25.25 0 01-.249-.225l-.66-6.6z">
+                </path>
+            </svg>
+            <a class="text-right" href="/profile/trash">Thùng rác</a>
+        </div>
+    </div>
+    <table class="table table-striped table-dark">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Tên khóa học</th>
+                <th scope="col">Chi tiết</th>
+                <th scope="col">Thời gian tạo</th>
+                <th scope="col">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each course}}
+            <tr>
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{this.name}}</td>
+                <td>{{this.desc}}</td>
+                <td>{{this.createdAt}}</td>
+                <td>
+                    <a class="btn btn-primary" href="/courses/{{this._id}}/edit" role="button">Sửa</a>
+                    <a class="btn btn-dark" data-toggle="modal" data-id="{{this._id}}" data-target="#exampleModal"
+                        role="button">Xóa</a>
+                </td>
+                {{else}}
+            <tr>
+                <td colspan="5" class="text-center">
+                    Không có khóa học nào
+                    <a href="/courses/create">Thêm khóa học</a>
+                </td>
+            </tr>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn xóa khóa học này không?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Không</button>
+                    <button id="delete-course" role="button" href="" class="btn btn-primary">Có</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        var id;
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            id = button.data('id')
+        })
+        $('#delete-course').on('click', function () {
+            const url = `/courses/${id}?_method=DELETE`
+            var $form = $(`<form action="${url}" method="POST"></form>`)
+            $form.appendTo($('body')).submit();
+        })
+    }
+</script>
