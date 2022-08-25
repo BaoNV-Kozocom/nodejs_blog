@@ -5,10 +5,10 @@ const { mutiple } = require('../../utils/mongoose');
 class ProfileController {
     // [GET] /course/:slug
     get(req, res, next) {
-        Course.find({})
-            .then((course) => {
-                res.render('profile/store', { course: mutiple(course) });
-            })
+        Promise.all([Course.find({}), Course.countDocumentsDeleted()])
+            .then(([course, count]) =>
+                res.render('profile/store', { course: mutiple(course), count }),
+            )
             .catch(next);
     }
 

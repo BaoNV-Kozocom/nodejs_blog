@@ -56,6 +56,20 @@ class CourseController {
             .then(() => res.redirect('back'))
             .catch(next);
     }
+
+    action(req, res, next) {
+        switch (req.body.action) {
+            case 'delete':
+                Course.delete({ _id: { $in: req.body.Ids } })
+                    .then(() => res.redirect('back'))
+                    .catch(next);
+                break;
+
+            default:
+                res.json({ message: 'Action not allowed' });
+                break;
+        }
+    }
 }
 
 module.exports = new CourseController();

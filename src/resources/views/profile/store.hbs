@@ -1,20 +1,43 @@
-<div class="mt-4">
+<form name="container-form" method="post" action="/courses/action" class="mt-4">
     <div>
         <h3>Khóa học của tôi</h3>
+        {{#if count}}
         <div class="text-right">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                <path fill-rule="evenodd"
-                    d="M6.5 1.75a.25.25 0 01.25-.25h2.5a.25.25 0 01.25.25V3h-3V1.75zm4.5 0V3h2.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75zM4.496 6.675a.75.75 0 10-1.492.15l.66 6.6A1.75 1.75 0 005.405 15h5.19c.9 0 1.652-.681 1.741-1.576l.66-6.6a.75.75 0 00-1.492-.149l-.66 6.6a.25.25 0 01-.249.225h-5.19a.25.25 0 01-.249-.225l-.66-6.6z">
-                </path>
-            </svg>
-            <a class="text-right" href="/profile/trash">Thùng rác</a>
+            <a role="button" class="btn btn-primary" href="/profile/trash">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <path fill-rule="evenodd"
+                        d="M6.5 1.75a.25.25 0 01.25-.25h2.5a.25.25 0 01.25.25V3h-3V1.75zm4.5 0V3h2.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75zM4.496 6.675a.75.75 0 10-1.492.15l.66 6.6A1.75 1.75 0 005.405 15h5.19c.9 0 1.652-.681 1.741-1.576l.66-6.6a.75.75 0 00-1.492-.149l-.66 6.6a.25.25 0 01-.249.225h-5.19a.25.25 0 01-.249-.225l-.66-6.6z">
+                    </path>
+                </svg>
+                Thùng rác <span class="badge badge-light">{{count}}</span>
+            </a>
         </div>
+        {{/if}}
+        <div class="mt-2 mb-2 d-flex align-items-center">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                <label class="form-check-label" for="defaultCheck1">
+                    Chọn tất cả
+                </label>
+            </div>
+            <select class="form-control form-control-sm w-25 ml-2 mr-2 check-all" name="action" required>
+                <option value="">--Chọn hành động--</option>
+                <option value="delete">Xóa</option>
+            </select>
+            <button id="doing" class="btn btn-primary btn-sm" disabled>Thực hiện</button>
+        </div>
+
     </div>
     <table class="table table-striped table-dark">
         <thead>
             <tr>
+                <th scope="col"></th>
                 <th scope="col">STT</th>
-                <th scope="col">Tên khóa học</th>
+                <th scope="col">Tên khóa học
+                    <a href="">
+                        <span class="oi oi-elevator"></span>
+                    </a>
+                </th>
                 <th scope="col">Chi tiết</th>
                 <th scope="col">Thời gian tạo</th>
                 <th scope="col">Hành động</th>
@@ -23,6 +46,11 @@
         <tbody>
             {{#each course}}
             <tr>
+                <th>
+                    <div class="form-check">
+                        <input class="form-check-input checkId" type="checkbox" name="Ids[]" value="{{this._id}}">
+                    </div>
+                </th>
                 <th scope="row">{{sum @index 1}}</th>
                 <td>{{this.name}}</td>
                 <td>{{this.desc}}</td>
@@ -65,11 +93,12 @@
             </div>
         </div>
     </div>
-</div>
+</form>
 
 <script>
     window.onload = function () {
         var id;
+        var courseId = []
         $('#exampleModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             id = button.data('id')
@@ -79,5 +108,25 @@
             var $form = $(`<form action="${url}" method="POST"></form>`)
             $form.appendTo($('body')).submit();
         })
+
+        $('#defaultCheck1').on('change', function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+            removeClass()
+        })
+
+        $('.checkId').on('change', function () {
+            const isCheckAll = $('input[name="Ids[]"]').length === $('input[name="Ids[]"]:checked').length
+            $('#defaultCheck1').prop('checked', isCheckAll);
+            removeClass()
+        });
+
+        function removeClass() {
+            if ($('input[name="Ids[]"]:checked').length) {
+                $('#doing').removeAttr('disabled');
+            } else {
+                $('#doing').attr('disabled', true);
+            }
+        }
+
     }
 </script>
